@@ -67,13 +67,55 @@
             z-index: 1;
         }
 
+        .logo-wrapper {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 24px;
+            border-radius: 36px;
+            padding: 4px; /* 边框变粗 */
+            overflow: hidden; /* 必须裁剪，否则旋转背景会溢出 */
+            /* 利用多重阴影模拟多彩外发光 */
+            box-shadow: 
+                0 0 20px rgba(0, 153, 255, 0.4),
+                0 0 40px rgba(255, 226, 58, 0.2);
+            z-index: 0;
+            /* 解决 Safari 圆角裁剪 bug */
+            transform: translateZ(0);
+        }
+
+        /* 流光背景层 */
+        .logo-wrapper::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: conic-gradient(
+                #0099FF, #8b5cf6, #ec4899, #FFE23A, #0099FF
+            );
+            animation: rotateBorder 2s linear infinite; /* 加快流速 */
+            z-index: -1;
+        }
+
+        /* 移除 after，因为 overflow hidden 挡住了外发光，改用 box-shadow */
+        .logo-wrapper::after {
+            display: none;
+        }
+        
+        @keyframes rotateBorder {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
         .logo { 
             width: 120px; 
             height: 120px; 
-            border-radius: 24px; 
-            margin-bottom: 24px; 
-            border: 1px solid var(--border);
-            box-shadow: 0 0 0 1px #000;
+            border-radius: 32px; 
+            display: block;
+            position: relative;
+            z-index: 1;
+            background: #111;
+            margin-bottom: 0;
+            border: none;
         }
 
         h1 { 
@@ -256,7 +298,9 @@
     <div class="bg-glow"></div>
 
     <header class="header">
-        <img class="logo" src="LOGO.png" alt="Logo">
+        <div class="logo-wrapper">
+            <img class="logo" src="LOGO.png" alt="Logo">
+        </div>
         <h1>ISUX EasyDesign</h1>
         <p class="subtitle">帮助 ISUX Designer 更 Easy 完成运营设计<br>SELECT MODULE TO INITIALIZE</p>
     </header>
